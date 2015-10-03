@@ -1,7 +1,56 @@
 ContentEditable = require("./ContentEditable")
 
+script = [
+  {prefix: "<mr. robot>", input: "Hello friend. If you've come, you've come for a reason. You may not be able to explain it yet, but there's a part of you that's exhausted with this world... a world that decides where you work, who you see, and how you empty and fill your depressing bank account. Even the Internet connection you're using to read this is costing you, slowly chipping away at your existence. There are things you want to say. Soon I will give you a voice. Today your education begins."}
+]
+
+Line = React.createClass
+
+  render: ->
+    {prefix, input, prompt} = @props
+    <div className="line">
+      {
+        if prefix
+          <span className="prefix">{prefix}</span>
+      }
+      <span className="input">{input}</span>
+      {
+        if prompt
+          <span className="prompt"> </span>
+      }
+    </div>
+
+LineTyper = React.createClass
+
+  displayName: "LineTyper"
+
+  getDefaultProps: ->
+    charDelay: 100
+
+  getInitialState: ->
+    charPosition: 0
+
+  componentDidMount: ->
+    @timer = setInterval(@type, @props.charDelay)
+
+  componentWillUnmount: ->
+    clearInterval(@timer)
+
+  type: ->
+    char = @props.line[char]
+
+
 Terminal = React.createClass
-  
+
+  displayName: "Terminal"
+
+  render: ->
+    <div className="Terminal">
+      { @props.history.map (line)-> <Line {...line} /> }
+    </div>
+
+CommandTerminal = React.createClass
+
   getInitialState: ->
     history: []
     history_pos: 0
@@ -23,7 +72,7 @@ Terminal = React.createClass
       when 40 # down arrow
         input = history.shift()
         @setState({input, history})
-    
+
   render: ->
     prompt = "Enter a command"
     <div>
