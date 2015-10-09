@@ -12,12 +12,25 @@ script = [
   {actor: "<wmdmark>", line: "Welcome {name}, let's get started"},
 ]
 
+TerminalScript = React.createClass
+
+  getInitialState: ->
+    lines: []
+    scriptPos: 0
+
+  nextLine: ->
+    {scriptPos, lines} = @state
+    lines.push(@props.script[])
+
+  render: ->
+    <Terminal history={@state.lines} onLineChange={@nextLine} />
+
+
 Terminal = require("./components/Terminal")
 App = React.createClass
 
   render: ->
     <div>
-      <h1>Herro</h1>
       <Terminal />
     </div>
 
