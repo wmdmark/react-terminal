@@ -1,0 +1,26 @@
+.Terminal {
+  font-family: 'Source Code Pro';
+  background-color: #000;
+  color: #fff;
+  padding: 10px;
+  border: 1px solid #000;
+}
+
+.Prompt__cursor {
+  animation: blink 1s steps(2, start) infinite;
+  -webkit-animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  to {
+    background-color: #fff;
+    color: #000;
+  }
+}
+
+@-webkit-keyframes blink {
+  to {
+    background-color: #999;
+    color: #fff;
+  }
+}

@@ -1,89 +1,113 @@
-ContentEditable = require("./ContentEditable")
-
-
 Line = React.createClass
-
+  
+  displayName: "Line"
+  
   render: ->
-    {prefix, input, prompt} = @props
-    <div className="line">
-      {
-        if prefix
-          <span className="prefix">{prefix}</span>
-      }
-      <span className="input">{input}</span>
-      {
-        if prompt
-          <span className="prompt"> </span>
-      }
-    </div>
+    <div className="Line">{@props.line}</div>
 
-LineTyper = React.createClass
-
-  displayName: "LineTyper"
-
-  getDefaultProps: ->
-    charDelay: 100
-
+Prompt = React.createClass
+  
+  displayName : "Prompt"
+  
   getInitialState: ->
-    charPosition: 0
+    input: ""
+    cursorPosition: 0
 
   componentDidMount: ->
-    @timer = setInterval(@type, @props.charDelay)
+    document.addEventListener("keydown", @onKeyDown)
+    document.addEventListener("keypress", @onKeyPress)
 
   componentWillUnmount: ->
-    clearInterval(@timer)
+    document.removeEventListener("keydown", @onKeyDown)
+    document.removeEventListener("keypress", @onKeyPress)
 
-  type: ->
-    char = @props.line[char]
+  onKeyDown: (e)->
+    #console.log "onKeyDown", e.keyCode
+    switch e.keyCode
+      when 37
+        # left arrow
+        e.preventDefault()
+        if @state.cursorPosition > 0
+          @setState
+            cursorPosition: @state.cursorPosition - 1
+      when 39
+        # right arrow
+        e.preventDefault()
+        if @state.cursorPosition < @state.input.length
+          @setState
+            cursorPosition: @state.cursorPosition + 1
+      when 8
+        # backspace
+        e.preventDefault()
+
+        cp = @state.cursorPosition
+        if @state.input.length <= 1
+          input = ""
+        else
+          input = @state.input
+          cp = @state.cursorPosition
+          input = input.substring(0, cp-1) + input.substring(cp, input.length)
+          if cp >= 1
+            cp = @state.cursorPosition - 1
+          else
+            cp = 0
+        @setState
+          input: input
+          cursorPosition: cp
+      when 13
+        # enter key
+        e.preventDefault()
+        @props.onSubmit(@state.input)
+        @setState(input: "", cursorPosition: 0)
+
+  onKeyPress: (e)->
+    e.preventDefault()
+    input = @state.input
+    cp = @state.cursorPosition
+    char = String.fromCharCode(e.keyCode)
+    input = input.substring(0, cp) + char + input.substring(cp, input.length)
+    input = input.replace(/ /g, "\u00a0")
+    @setState
+      input: input
+      cursorPosition: @state.cursorPosition + 1
+
+  render: ->
+    {input, cursorPosition} = @state
+    if cursorPosition > 0
+      linput = input.substring(0, cursorPosition)
+    if cursorPosition < (input.length)
+      cursorChar = input[cursorPosition]
+    else
+      cursorChar = "\u00a0"
+    rinput = input.substring(cursorPosition+1, input.length)
+    <div className="Prompt">
+      <span className="Prompt__from">input:</span>
+      {
+        if linput
+          <span>{linput}</span>
+      }
+      <span className="Prompt__cursor">{cursorChar}</span>
+      <span>{rinput}</span>
+    </div>
 
 
 Terminal = React.createClass
 
   displayName: "Terminal"
 
-  render: ->
-    <div className="Terminal">
-      { @props.history.map (line)-> <Line {...line} /> }
-    </div>
-
-CommandTerminal = React.createClass
-
   getInitialState: ->
     history: []
-    history_pos: 0
-    input: ""
 
-  onChange: (e)->
-    @setState(input: e.target.value)
-
-  onKeyDown: (e)->
-    {history, input, history_pos} = @state
-    switch e.keyCode
-      when 13 # enter
-        history.push(@state.input)
-        input = ""
-        @setState({input, history})
-      when 38 # up arrow
-        input = history.pop()
-        @setState({input, history})
-      when 40 # down arrow
-        input = history.shift()
-        @setState({input, history})
+  onPromptSubmit: (command)->
+    history = @state.history
+    history.push(command)
+    @setState
+      history: history
 
   render: ->
-    prompt = "Enter a command"
-    <div>
-      {@state.history.map (line)-> <div>{line}</div>}
-      <div className="prompt">
-        {prompt}
-        <div className="cmd">
-          <span class="prompt"><span>
-          </span></span>
-          <span>TESADFASFDSADFSFSAD</span>
-          <span class="cursor">F</span>
-          <span>ASFDASDF</span>
-          <textarea class="clipboard"></textarea></div>
-      </div>
+    <div className="Terminal">
+      { @state.history.map (line)-> <Line line={line} /> }
+      <Prompt onSubmit={@onPromptSubmit} />
     </div>
 
 module.exports = Terminal
