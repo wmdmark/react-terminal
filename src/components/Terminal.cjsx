@@ -112,7 +112,7 @@ Terminal = React.createClass
 
   render: ->
     <div className="Terminal">
-      { @state.history.map (line)-> <Line line={line} /> }
+      { @state.history.map (line, index)-> <Line key={index} line={line} /> }
       <Prompt onSubmit={@onPromptSubmit} />
     </div>
 
