@@ -1,4 +1,7 @@
 reduceKeyDown = (input, cursorPosition, e)->
+  if input.length is 0 and e.keyCode in [37, 39, 8]
+    e.preventDefault()
+    return [input, cursorPosition]
   switch e.keyCode
     when 37
       # left arrow
@@ -25,9 +28,15 @@ reduceKeyDown = (input, cursorPosition, e)->
 
 reduceKeyPress = (input, cursorPosition, e)->
   e.preventDefault()
+  # Don't allow multiple spaces
+  if e.keyCode is 32 and input.length >= 2 # space
+    prevChar = input[cursorPosition-2] 
+    if not prevChar? or prevChar is ' '
+      console.log "abort space"
+      return [input, cursorPosition]
   char = String.fromCharCode(e.keyCode)
   input = input.substring(0, cursorPosition) + char + input.substring(cursorPosition, input.length)
-  input = input.replace(/ /g, "\u00a0")
+  #input = input.replace(/ /g, "\u00a0")
   cursorPosition++
   return [input, cursorPosition]
 

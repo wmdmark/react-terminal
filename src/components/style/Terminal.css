@@ -1,5 +1,6 @@
 .Terminal {
-  font-family: 'Source Code Pro';
+  font-family: monaco, 'Source Code Pro';
+  font-size: 11pt;
   background-color: #000;
   color: #fff;
   padding: 10px;
