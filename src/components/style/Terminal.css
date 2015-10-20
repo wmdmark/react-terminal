@@ -7,7 +7,7 @@
 }
 
 .Prompt__cursor {
-  animation: blink 1s steps(2, start) infinite;
+  animation: blink .75s steps(2, start) infinite;
   -webkit-animation: blink 1s steps(2, start) infinite;
 }
 

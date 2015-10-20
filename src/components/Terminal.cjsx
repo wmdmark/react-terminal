@@ -25,10 +25,10 @@ reduceKeyDown = (input, cursorPosition, e)->
 
 reduceKeyPress = (input, cursorPosition, e)->
   e.preventDefault()
-  cursorPosition++
   char = String.fromCharCode(e.keyCode)
   input = input.substring(0, cursorPosition) + char + input.substring(cursorPosition, input.length)
   input = input.replace(/ /g, "\u00a0")
+  cursorPosition++
   return [input, cursorPosition]
 
 Line = React.createClass
