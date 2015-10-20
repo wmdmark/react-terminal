@@ -1,3 +1,36 @@
+reduceKeyDown = (input, cursorPosition, e)->
+  switch e.keyCode
+    when 37
+      # left arrow
+      e.preventDefault()
+      if cursorPosition > 0
+        cursorPosition = cursorPosition - 1
+    when 39
+      # right arrow
+      e.preventDefault()
+      if cursorPosition < input.length
+        cursorPosition = cursorPosition + 1
+    when 8
+      # backspace
+      e.preventDefault()
+      if input.length <= 1
+        input = ""
+      else
+        input = input.substring(0, cursorPosition-1) + input.substring(cursorPosition, input.length)
+        if cursorPosition >= 1
+          cursorPosition = cursorPosition - 1
+        else
+          cursorPosition = 0
+  return [input, cursorPosition]
+
+reduceKeyPress = (input, cursorPosition, e)->
+  e.preventDefault()
+  cursorPosition++
+  char = String.fromCharCode(e.keyCode)
+  input = input.substring(0, cursorPosition) + char + input.substring(cursorPosition, input.length)
+  input = input.replace(/ /g, "\u00a0")
+  return [input, cursorPosition]
+
 Line = React.createClass
   
   displayName: "Line"
@@ -22,54 +55,18 @@ Prompt = React.createClass
     document.removeEventListener("keypress", @onKeyPress)
 
   onKeyDown: (e)->
-    #console.log "onKeyDown", e.keyCode
-    switch e.keyCode
-      when 37
-        # left arrow
-        e.preventDefault()
-        if @state.cursorPosition > 0
-          @setState
-            cursorPosition: @state.cursorPosition - 1
-      when 39
-        # right arrow
-        e.preventDefault()
-        if @state.cursorPosition < @state.input.length
-          @setState
-            cursorPosition: @state.cursorPosition + 1
-      when 8
-        # backspace
-        e.preventDefault()
-
-        cp = @state.cursorPosition
-        if @state.input.length <= 1
-          input = ""
-        else
-          input = @state.input
-          cp = @state.cursorPosition
-          input = input.substring(0, cp-1) + input.substring(cp, input.length)
-          if cp >= 1
-            cp = @state.cursorPosition - 1
-          else
-            cp = 0
-        @setState
-          input: input
-          cursorPosition: cp
-      when 13
-        # enter key
-        e.preventDefault()
-        @props.onSubmit(@state.input)
-        @setState(input: "", cursorPosition: 0)
+    if e.keyCode is 13
+      # enter key
+      e.preventDefault()
+      @props.onSubmit(@state.input)
+      @setState(input: "", cursorPosition: 0)
+    else
+      [input, cursorPosition] = reduceKeyDown(@state.input, @state.cursorPosition, e)
+      @setState({input, cursorPosition})
 
   onKeyPress: (e)->
-    e.preventDefault()
-    input = @state.input
-    cp = @state.cursorPosition
-    char = String.fromCharCode(e.keyCode)
-    input = input.substring(0, cp) + char + input.substring(cp, input.length)
-    input = input.replace(/ /g, "\u00a0")
-    @setState
-      input: input
-      cursorPosition: @state.cursorPosition + 1
+    [input, cursorPosition] = reduceKeyPress(@state.input, @state.cursorPosition, e)
+    @setState({input, cursorPosition})
 
   render: ->
     {input, cursorPosition} = @state
