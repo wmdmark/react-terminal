@@ -4,6 +4,8 @@ require("expose?_!lodash");
 Terminal = require("./components/Terminal")
 require("./components/style/Terminal.css")
 
+ReactDOM = require("react-dom")
+
 App = React.createClass
 
   render: ->

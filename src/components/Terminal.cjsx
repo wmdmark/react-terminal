@@ -28,24 +28,15 @@ reduceKeyDown = (input, cursorPosition, e)->
 
 reduceKeyPress = (input, cursorPosition, e)->
   e.preventDefault()
-  # Don't allow multiple spaces
-  if e.keyCode is 32 and input.length >= 2 # space
-    prevChar = input[cursorPosition-2] 
-    if not prevChar? or prevChar is ' '
-      console.log "abort space"
-      return [input, cursorPosition]
   char = String.fromCharCode(e.keyCode)
   input = input.substring(0, cursorPosition) + char + input.substring(cursorPosition, input.length)
   #input = input.replace(/ /g, "\u00a0")
   cursorPosition++
   return [input, cursorPosition]
 
-Line = React.createClass
-  
-  displayName: "Line"
-  
-  render: ->
-    <div className="Line">{@props.line}</div>
+Line = (props)->
+  <div className="Line">{props.line}</div>
+Line.displayName = "Line"
 
 Prompt = React.createClass
   
@@ -87,7 +78,7 @@ Prompt = React.createClass
       cursorChar = "\u00a0"
     rinput = input.substring(cursorPosition+1, input.length)
     <div className="Prompt">
-      <span className="Prompt__from">input:</span>
+      <span className="Prompt__from">{@props.prompt}</span>
       {
         if linput
           <span>{linput}</span>
@@ -113,7 +104,7 @@ Terminal = React.createClass
   render: ->
     <div className="Terminal">
       { @state.history.map (line, index)-> <Line key={index} line={line} /> }
-      <Prompt onSubmit={@onPromptSubmit} />
+      <Prompt prompt="wmdmark@localhost:" onSubmit={@onPromptSubmit} />
     </div>
 
 module.exports = Terminal
