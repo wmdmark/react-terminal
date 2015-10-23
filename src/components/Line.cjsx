@@ -1,11 +1,13 @@
 Line = (props)->
-  {line} = props
+  {line, color, delay} = props
   className = "Line"
-  if line.error is yes
-    className = "#{className} error"
+  style = if color
+    {color}
+  else
+    {}
   <div className={className}>
     <span className="Line__prompt">{line.prompt}</span>
-    <span className="Line__input">{line.input}</span>
+    <span className="Line__input" style={style}>{line.input}</span>
   </div>
 
 Line.displayName = "Line"

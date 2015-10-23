@@ -1,7 +1,7 @@
-keyEventUtils = require("../utils/key-event-utils")
+inputUtils = require("../utils/input-utils")
 
 Prompt = (props)->
-  [left, cursor, right] = keyEventUtils.getPromptStrings(
+  [left, cursor, right] = inputUtils.getPromptStrings(
     props.input, 
     props.cursorPosition
   )

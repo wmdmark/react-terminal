@@ -2,6 +2,11 @@ historyScrollOffset = 0
 
 module.exports =
 
+  addLine: (state, input, prompt=null, color=null)->
+    history = state.history
+    history.push({input, prompt, color})
+    return _.extend {}, state, {history}
+
   reduceKeyDown: (state, event)->
     {input, cursorPosition, prompt, history} = state
 
