@@ -1,14 +1,15 @@
+keyEventUtils = require("../utils/key-event-utils")
+
 Prompt = (props)->
-  {input, prompt, cursorPosition} = props
-  cursor = if cursorPosition < (input.length)
-    input[cursorPosition]
-  else
-    "\u00a0"
+  [left, cursor, right] = keyEventUtils.getPromptStrings(
+    props.input, 
+    props.cursorPosition
+  )
   <div className="Prompt">
-    <span className="Prompt__from">{prompt}</span>
-    <span>{input.substring(0, cursorPosition)}</span>
+    <span className="Prompt__from">{props.prompt}</span>
+    <span>{left}</span>
     <span className="Prompt__cursor">{cursor}</span>
-    <span>{input.substring(cursorPosition+1, input.length)}</span>
+    <span>{right}</span>
   </div>
 
 Prompt.displayName = "Prompt"

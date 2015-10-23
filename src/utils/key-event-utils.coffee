@@ -38,3 +38,12 @@ module.exports =
     input = input.substring(0, cursorPosition) + char + input.substring(cursorPosition, input.length)
     cursorPosition++
     return [input, cursorPosition]
+
+  getPromptStrings: (input, cursorPosition)->
+    left = input.substring(0, cursorPosition)
+    right = input.substring(cursorPosition+1, input.length)
+    cursor = if cursorPosition < (input.length)
+      input[cursorPosition]
+    else
+      "\u00a0"
+    return [left, cursor, right]
