@@ -1,8 +1,9 @@
+historyScrollOffset = 0
+
 module.exports = 
   
   reduceKeyDown: (input, cursorPosition, prompt, history, e)->
-    
-    if e.keyCode in [37, 39, 8, 13]
+    if e.keyCode in [37, 39, 8, 13, 38, 40]
       e.preventDefault()
     
     switch e.keyCode
@@ -19,6 +20,20 @@ module.exports =
         # right arrow
         if cursorPosition < input.length
           cursorPosition = cursorPosition + 1
+      when 38
+        # up arrow
+        pos = (history.length + (historyScrollOffset-1))
+        if pos > 0
+          historyScrollOffset--
+          input = history[pos].input
+          cursorPosition = input.length
+      when 40
+        # up arrow
+        pos = (history.length + (historyScrollOffset+1))
+        if pos < history.length
+          historyScrollOffset++
+          input = history[pos].input
+          cursorPosition = input.length
       when 8
         # backspace
         if input.length <= 1
