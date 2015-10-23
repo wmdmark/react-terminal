@@ -8,9 +8,9 @@ state =
   history: []
   cursorPosition: 0
   input: ""
-  prompt: "~ » "
+  prompt: "~/ » "
 
 App = ->
-  <TerminalContainer initialState={state} />
+  <TerminalContainer state={state} />
 
 React.render(<App/>, document.getElementById('app'))

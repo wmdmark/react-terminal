@@ -1,4 +1,5 @@
 historyScrollOffset = 0
+commands = require("./commands")
 
 module.exports = 
   
@@ -10,8 +11,10 @@ module.exports =
       when 13 
         # enter key
         history.push({prompt, input})
+        history = commands.execute(input, history)
         input = ""
         cursorPosition = 0
+        console.log "history after commands", history
       when 37
         # left arrow
         if cursorPosition > 0

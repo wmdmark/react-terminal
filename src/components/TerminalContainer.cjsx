@@ -4,7 +4,7 @@ Terminal = require("./Terminal")
 class TerminalContainer extends React.Component
 
   componentWillMount: ->
-    @state = @props.initialState
+    {@state} = @props
 
   componentDidMount: ->
     document.addEventListener("keydown", @onKeyDown)
