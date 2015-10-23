@@ -1,12 +1,13 @@
 {
-  "name": "hackers",
-  "version": "1.0.0",
-  "description": "",
+  "name": "react-terminal",
+  "version": "0.5.0",
+  "description": "A simple, terminal-like, component for React.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node dev-server.js"
+    "start": "node dev-server.js",
+    "build": "cjsx -cb -o dist/ src/ && webpack"
   },
-  "author": "",
+  "author": "Mark Johnson (@wmdmark)",
   "license": "ISC",
   "devDependencies": {
     "cjsx-loader": "^2.0.1",
@@ -21,7 +22,6 @@
     "webpack-dev-server": "^1.12.0"
   },
   "dependencies": {
-    "lodash": "^3.10.1",
     "react": "^0.14.0",
     "react-dom": "^0.14.0"
   }

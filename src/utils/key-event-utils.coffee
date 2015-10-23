@@ -1,0 +1,40 @@
+module.exports = 
+  
+  reduceKeyDown: (input, cursorPosition, prompt, history, e)->
+    
+    if e.keyCode in [37, 39, 8, 13]
+      e.preventDefault()
+    
+    switch e.keyCode
+      when 13 
+        # enter key
+        history.push({prompt, input})
+        input = ""
+        cursorPosition = 0
+      when 37
+        # left arrow
+        if cursorPosition > 0
+          cursorPosition = cursorPosition - 1
+      when 39
+        # right arrow
+        if cursorPosition < input.length
+          cursorPosition = cursorPosition + 1
+      when 8
+        # backspace
+        if input.length <= 1
+          input = ""
+        else
+          input = input.substring(0, cursorPosition-1) + input.substring(cursorPosition, input.length)
+          if cursorPosition >= 1
+            cursorPosition = cursorPosition - 1
+          else
+            cursorPosition = 0
+    
+    return [input, cursorPosition, history]
+
+  reduceKeyPress: (input, cursorPosition, e)->
+    e.preventDefault()
+    char = String.fromCharCode(e.keyCode)
+    input = input.substring(0, cursorPosition) + char + input.substring(cursorPosition, input.length)
+    cursorPosition++
+    return [input, cursorPosition]
