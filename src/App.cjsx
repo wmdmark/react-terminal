@@ -3,6 +3,7 @@ require("expose?_!lodash");
 
 ReactDOM = require("react-dom")
 
+inputUtils = require("./utils/input-utils")
 TerminalContainer = require("./components/TerminalContainer")
 
 state =
@@ -11,32 +12,51 @@ state =
   input: ""
   prompt: "~/ » "
 
+class Loader extends React.Component
+
+  componentWillMount: ->
+    @state = index: 0
+    @timer = setInterval @tick, 300
+
+  compontentWillUnmount: ->
+    clearInterval(@timer)
+
+  tick: =>
+    index = if @state.index < 2 
+      @state.index+1
+    else
+      0
+    @setState({index: index})
+
+  render: ->
+    char = ["/", "--", "\\"][@state.index]
+    <span style={color: "#fff"}>{char}</span>
+
+
+
 commands =
 
   clear: (state)->
-    state = _.extend {}, state,
-      history: []
-      cursorPosition: 0
-      input: ""
-    return state
+    history: []
+    cursorPosition: 0
+    input: ""
 
-  echo: (state, input)->
-    {history} = state
-    history.push({input, prompt: state.prompt})
-    state = _.extend {}, state,
-      history: history
-      cursorPosition: 0
-      input: ""
-    return state
+  echo: (state, args...)->
+    output = args.join(" ")
+    inputUtils.addLine(state, output)
 
   su: (state, user)->
-    state = _.extend {}, state,
-      prompt: "#{user}@~/ » "
-    return state
-
+    prompt: "#{user}@~/ » "
+  
   error: (state, command)->
-    return @echo("Command '#{}' not found.")
+    output = "Command '#{command}' not found."
+    inputUtils.addLine(state, output)
 
+  load: (state)->
+    yield inputUtils.addLine(state, <Loader />)
+    _.delay ->
+      yield inputUtils.addLine(state, "Finished!")
+    , 2000
 
 App = ->
   <TerminalContainer state={state} commands={commands} />

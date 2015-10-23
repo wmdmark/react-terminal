@@ -1,4 +1,4 @@
-keyEventUtils = require("../utils/key-event-utils")
+inputUtils = require("../utils/input-utils")
 Terminal = require("./Terminal")
 
 class TerminalContainer extends React.Component
@@ -18,7 +18,9 @@ class TerminalContainer extends React.Component
     {command, args} = commandData
     @props.onCommand?(command)
     if @props.commands[command]?
-      state = @props.commands[command](@state, args...)
+      result = @props.commands[command](@state, args...)
+      console.log "command result: ", result
+      state = _.extend {}, @state, result
     else
       # TODO: handle error
       state = _.extend @state,
@@ -27,7 +29,7 @@ class TerminalContainer extends React.Component
 
   onKeyDown: (event)=>
     # Key down listens for cursor movement + enter key
-    state = keyEventUtils.reduceKeyDown(@state, event)
+    state = inputUtils.reduceKeyDown(@state, event)
     @setState(state)
     if state.command
       # a command was attempted (enter key presesed)
@@ -35,7 +37,7 @@ class TerminalContainer extends React.Component
 
   onKeyPress: (event)=>
     # Key press is a typed character
-    state = keyEventUtils.reduceKeyPress(@state, event)
+    state = inputUtils.reduceKeyPress(@state, event)
     @setState(state)
 
   render: ->
