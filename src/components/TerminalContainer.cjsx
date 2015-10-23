@@ -21,9 +21,11 @@ class TerminalContainer extends React.Component
       state = @props.commands[command](@state, args...)
     else
       # TODO: handle error
-      state = _.extend @state,
-
+      @onCommandError(command)
     @setState(state)
+
+  onCommandError: (command)->
+    console.log command
 
   onKeyDown: (event)=>
     # Key down listens for cursor movement + enter key
