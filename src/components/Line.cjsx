@@ -1,5 +1,4 @@
 Line = (props)->
-  console.log "render line", props.line
   {line} = props
   className = "Line"
   if line.error is yes

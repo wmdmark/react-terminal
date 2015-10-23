@@ -14,25 +14,29 @@ class TerminalContainer extends React.Component
     document.removeEventListener("keydown", @onKeyDown)
     document.removeEventListener("keypress", @onKeyPress)
 
+  onCommand: (commandData)->
+    {command, args} = commandData
+    @props.onCommand?(command)
+    if @props.commands[command]?
+      state = @props.commands[command](@state, args...)
+    else
+      # TODO: handle error
+      state = _.extend @state,
+
+    @setState(state)
+
   onKeyDown: (event)=>
     # Key down listens for cursor movement + enter key
-    [input, cursorPosition, history] = keyEventUtils.reduceKeyDown(
-      @state.input, 
-      @state.cursorPosition, 
-      @state.prompt,
-      @state.history, 
-      event
-    )
-    @setState({input, cursorPosition, history})
+    state = keyEventUtils.reduceKeyDown(@state, event)
+    @setState(state)
+    if state.command
+      # a command was attempted (enter key presesed)
+      @onCommand(state.command)
 
   onKeyPress: (event)=>
     # Key press is a typed character
-    [input, cursorPosition] = keyEventUtils.reduceKeyPress(
-      @state.input, 
-      @state.cursorPosition, 
-      event
-    )
-    @setState({input, cursorPosition})
+    state = keyEventUtils.reduceKeyPress(@state, event)
+    @setState(state)
 
   render: ->
     <Terminal {...@state} />
