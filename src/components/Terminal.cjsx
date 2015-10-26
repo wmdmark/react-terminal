@@ -6,8 +6,12 @@ require("./style/Terminal.css")
 Terminal = (props)->
   {input, cursorPosition, history, prompt} = props
   <div className="Terminal">
-    { history.map (line, index)-> <Line key={index} line={line} /> }
-    { 
+    {
+      history.map (line, index)->
+        console.log "rendering line: ", line
+        <Line key={index} {...line} />
+    }
+    {
       if prompt?
         <Prompt prompt={prompt} input={input} cursorPosition={cursorPosition} />
     }

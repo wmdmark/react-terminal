@@ -1,6 +1,8 @@
 inputUtils = require("../utils/input-utils")
 Terminal = require("./Terminal")
 
+
+
 class TerminalContainer extends React.Component
 
   componentWillMount: ->
@@ -14,20 +16,32 @@ class TerminalContainer extends React.Component
     document.removeEventListener("keydown", @onKeyDown)
     document.removeEventListener("keypress", @onKeyPress)
 
+  addLine: (line, prompt)->
+    state = _.extend {}, inputUtils.addLine(@state, line)
+    @setState(state)
+
+  removeLine: (index=null)->
+    {history} = @state
+    if not index
+      history.pop()
+    else
+      # pluck?/splice
+    @setState({history})
+
   onCommand: (commandData)->
     {command, args} = commandData
     @props.onCommand?(command)
-    if @props.commands[command]?
-      result = @props.commands[command](@state, args...)
-      console.log "command result: ", result
-      state = _.extend {}, @state, result
+    commandFunc = @props.commands[command]
+    if commandFunc
+      commandFunc = commandFunc.bind(@actions)
+      state = commandFunc(state, args...)
     else
       # TODO: handle error
-      @onCommandError(command)
+      state = @onCommandError(command)
     @setState(state)
 
   onCommandError: (command)->
-    console.log command
+    inputUtils.addLine(@state, "Invalid command '#{command}'", null, "red")
 
   onKeyDown: (event)=>
     # Key down listens for cursor movement + enter key

@@ -2,7 +2,7 @@ inputUtils = require("../utils/input-utils")
 
 Prompt = (props)->
   [left, cursor, right] = inputUtils.getPromptStrings(
-    props.input, 
+    props.input,
     props.cursorPosition
   )
   <div className="Prompt">

@@ -22,7 +22,7 @@ class Loader extends React.Component
     clearInterval(@timer)
 
   tick: =>
-    index = if @state.index < 2 
+    index = if @state.index < 2
       @state.index+1
     else
       0
@@ -42,21 +42,23 @@ commands =
     input: ""
 
   echo: (state, args...)->
+    console.log "echo", state, args, @
     output = args.join(" ")
-    inputUtils.addLine(state, output)
+    @addLine(output)
 
   su: (state, user)->
     prompt: "#{user}@~/ » "
-  
+
   error: (state, command)->
     output = "Command '#{command}' not found."
     inputUtils.addLine(state, output)
 
-  load: (state)->
-    yield inputUtils.addLine(state, <Loader />)
+  load: (connector)->
+    connector.addLine(state, <Loader />)
     _.delay ->
-      yield inputUtils.addLine(state, "Finished!")
+      connector.addLine(state, "Finished!")
     , 2000
+    {}
 
 App = ->
   <TerminalContainer state={state} commands={commands} />

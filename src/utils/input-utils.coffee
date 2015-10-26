@@ -21,7 +21,7 @@ module.exports =
         command = parts[0]
         args = parts[1..]
         command = {command, args}
-        
+
         # enter key
         history.push({prompt, input})
         input = ""
