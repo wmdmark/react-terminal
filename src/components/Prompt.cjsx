@@ -1,4 +1,4 @@
-inputUtils = require("../utils/input-utils")
+inputUtils = require("../data/input-reducers")
 
 Prompt = (props)->
   [left, cursor, right] = inputUtils.getPromptStrings(

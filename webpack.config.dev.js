@@ -48,6 +48,10 @@ module.exports = {
     },{
       test: /\.css$/,
       loader: "style-loader!css-loader"
+    },{
+      test: /\.scss$/,
+      include: [path.resolve(__dirname, "src")],
+      loaders: ["style", "css", "autoprefixer-loader", "sass?sourceMap"]
     }]
   }
 };

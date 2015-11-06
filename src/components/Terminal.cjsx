@@ -1,22 +1,30 @@
 Line = require("./Line")
 Prompt = require("./Prompt")
 
-require("./style/Terminal.css")
+require("./style/Terminal.scss")
 
-Terminal = (props)->
-  {input, cursorPosition, history, prompt} = props
-  <div className="Terminal">
-    {
-      history.map (line, index)->
-        console.log "rendering line: ", line
-        <Line key={index} {...line} />
-    }
-    {
-      if prompt?
-        <Prompt prompt={prompt} input={input} cursorPosition={cursorPosition} />
-    }
-  </div>
+class Terminal extends React.Component
 
-Terminal.displayName = "Terminal"
+  componentDidUpdate: ->
+    @setScrollPosition()
+
+  setScrollPosition: ->
+    node = ReactDOM.findDOMNode(@)
+    offset = node.scrollHeight - node.offsetHeight
+    if offset > 0
+      node.scrollTop = offset
+
+  render: ->
+    {input, cursorPosition, lines, prompt, allowInput} = @props
+    <div className="Terminal">
+      {
+        lines.map (line, index)->
+          <Line key={index} {...line} />
+      }
+      {
+        if prompt
+          <Prompt prompt={prompt} input={input} cursorPosition={cursorPosition} />
+      }
+    </div>
 
 module.exports = Terminal

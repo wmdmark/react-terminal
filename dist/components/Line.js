@@ -2,15 +2,26 @@
 var Line;
 
 Line = function(props) {
-  var line;
-  line = props.line;
+  var color, input, prompt, style, type;
+  input = props.input, prompt = props.prompt, color = props.color, type = props.type;
+  style = color ? {
+    color: color
+  } : {};
+  if (type === "html") {
+    input = React.createElement("span", {
+      "dangerouslySetInnerHTML": {
+        __html: input
+      }
+    });
+  }
   return React.createElement("div", {
     "className": "Line"
   }, React.createElement("span", {
     "className": "Line__prompt"
-  }, line.prompt), React.createElement("span", {
-    "className": "Line__input"
-  }, line.input));
+  }, prompt), React.createElement("span", {
+    "className": "Line__input",
+    "style": style
+  }, input));
 };
 
 Line.displayName = "Line";
