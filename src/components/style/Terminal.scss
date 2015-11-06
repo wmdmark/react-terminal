@@ -1,0 +1,71 @@
+body  {
+  background-color: #000;
+  width: 100%;
+  min-height: 100%;
+  margin: 0px;
+  //-webkit-font-smoothing: antialiased;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.Terminal {
+  font-family: monospace;
+  font-size: 11pt;
+  font-weight: 400;
+  background-color: #000;
+  color: #C5E9E4;
+  padding: 10px;
+
+  width: 100%;
+  height:100vh;
+  overflow: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  
+}
+
+.Line, .Prompt {
+  white-space: pre-wrap;
+}
+
+.Line.error {
+  color: red;
+}
+
+.Line__input a {
+  color: #fff;
+}
+
+.Line__input h1, h2, h3, h4 {
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.Line__input strong {
+  font-weight: normal;
+  color: #fff;
+}
+
+.Prompt__cursor {
+  animation: blink 1s steps(2, start) infinite;
+}
+
+.Prompt__from, .Line__prompt {
+  color: #fff;
+}
+
+@keyframes blink {
+  to {
+    background-color: #fff;
+    color: #C5E9E4;
+  }
+}
+
+@-webkit-keyframes blink {
+  to {
+    background-color: #1D3531;
+    color: #C5E9E4;
+  }
+}
